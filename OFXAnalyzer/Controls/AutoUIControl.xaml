@@ -8,7 +8,14 @@
              Width="Auto"
              Height="Auto"
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid Name="ContentControl" Width="Auto" Height="Auto">
-            
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+        <TextBlock Text="{Binding Converter={StaticResource DisplayNameFromClassConverter}}"/>
+        <Grid Grid.Row="1" Name="ContentControl" Width="Auto" Height="Auto">
+
+        </Grid>
     </Grid>
 </UserControl>

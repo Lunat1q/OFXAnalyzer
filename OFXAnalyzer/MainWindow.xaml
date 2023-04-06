@@ -17,20 +17,31 @@
         Title="MainWindow" Height="800" Width="1300" Closing="Window_Closing">
     <Window.Resources>
         <DataTemplate x:Key="GroupRuleListBoxItemTemplate">
-            <Grid Margin="5">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-                <controls:AutoUIControl Item="{Binding}" VerticalAlignment="Center" />
-                <Button Grid.Column="1" Style="{StaticResource MaterialDesignFloatingActionMiniSecondaryLightButton}"
+            <materialDesign:Card MinWidth="300" MaxWidth="450">
+                <Grid Margin="5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <controls:AutoUIControl Item="{Binding}" VerticalAlignment="Center" />
+                    <Button Grid.Column="1" 
+                        Command="{Binding Path=DataContext.RemoveRuleFromGroupCommand, RelativeSource={RelativeSource AncestorType=ofxAnalyzer:MainWindow}}"
+                        CommandParameter="{Binding}"
+                        Background="#d43a3c"
+                        Width="28"
+                        Height="28"
+                        VerticalAlignment="Top"
+                        Foreground="#000000"
+                        BorderBrush="#e56f67"
+                        Style="{StaticResource MaterialDesignIconButton}"
                         Margin="5">
-                    <materialDesign:PackIcon
+                        <materialDesign:PackIcon
                         Width="16"
                         Height="16"
                         Kind="DeleteForever" />
-                </Button>
-            </Grid>
+                    </Button>
+                </Grid>
+            </materialDesign:Card>
         </DataTemplate>
     </Window.Resources>
     <Grid Margin="5">
@@ -80,7 +91,7 @@
                                 Text="Transactions" />
                         </StackPanel>
                     </TabItem.Header>
-                    <DataGrid
+                    <DataGrid Margin="5"
                         CanUserAddRows="False"
                         ItemsSource="{Binding Transactions}"
                         SelectionMode="Extended"
@@ -123,13 +134,13 @@
                         </StackPanel>
                     </TabItem.Header>
                     <StackPanel>
-                        <DataGrid
-                            CanUserAddRows="False"
-                            ItemsSource="{Binding Groups}"
-                            IsReadOnly="True"
-                            HeadersVisibility="Column"
-                            AutoGenerateColumns="False"
-                            SelectionUnit="FullRow">
+                        <DataGrid  Margin="5"
+                                   CanUserAddRows="False"
+                                   ItemsSource="{Binding Groups}"
+                                   IsReadOnly="True"
+                                   HeadersVisibility="Column"
+                                   AutoGenerateColumns="False"
+                                   SelectionUnit="FullRow">
                             <DataGrid.Columns>
                                 <DataGridTextColumn
                                     SortDirection="Ascending"
@@ -161,11 +172,17 @@
                                 Text="Group Settings" />
                         </StackPanel>
                     </TabItem.Header>
-                    <StackPanel Margin="10">
+                    <Grid Margin="10">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="1*"/>
+                        </Grid.RowDefinitions>
                         <Grid Margin="5">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="1*" />
+                                <ColumnDefinition Width="2*" />
                                 <ColumnDefinition Width="1*" />
+                                <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
                             <ComboBox Margin="5"
                                       materialDesign:ComboBoxAssist.MaxLength="10"
@@ -173,69 +190,85 @@
                                       materialDesign:HintAssist.HintOpacity=".26"
                                       ItemsSource="{Binding Groups}"
                                       DisplayMemberPath="GroupName"
+                                      Style="{StaticResource MaterialDesignOutlinedComboBox}"
                                       SelectedItem="{Binding SelectedGroupForEdit}"
                                       IsEditable="True" />
-                            <StackPanel Grid.Column="1" HorizontalAlignment="Right" Orientation="Horizontal">
-                                <TextBox Width="150" Name="NewGroupName"
+                                <TextBox Grid.Column="2" HorizontalAlignment="Stretch" Name="NewGroupName"
                                          materialDesign:HintAssist.Hint="New group name" Margin="5"
                                          Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-                                <Button Click="CreateNewGroupButton_OnClick" Margin="5"
+                                <Button Grid.Column="3" Click="CreateNewGroupButton_OnClick" Margin="5"
                                         Style="{StaticResource MaterialDesignFloatingActionMiniSecondaryButton}">
                                     <materialDesign:PackIcon Kind="ShapeSquarePlus" />
                                 </Button>
-                            </StackPanel>
                         </Grid>
-                        <materialDesign:Card
-                            IsEnabled="{Binding SelectedGroupForEdit, Converter={StaticResource IsNotNullConverter}}"
-                            materialDesign:ElevationAssist.Elevation="Dp2">
-                            <Grid Margin="5" DataContext="{Binding SelectedGroupForEdit}">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="1*" />
-                                </Grid.RowDefinitions>
-                                <TextBox
-                                    VerticalAlignment="Center"
-                                    materialDesign:HintAssist.Hint="Group name"
-                                    Text="{Binding GroupName}"
-                                    Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-                                <TextBox
-                                    Grid.Row="1" VerticalAlignment="Center"
-                                    materialDesign:HintAssist.Hint="Group order priority"
-                                    Text="{Binding Order}"
-                                    Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-
-                                <materialDesign:Card Grid.Row="2" Margin="5"
-                                                     materialDesign:ElevationAssist.Elevation="Dp1">
-                                    <StackPanel>
-                                        <StackPanel HorizontalAlignment="Right" Orientation="Horizontal" Margin="5"
-                                                    DataContext="{Binding DataContext.RuleSettings, RelativeSource={RelativeSource AncestorType=ofxAnalyzer:MainWindow}}">
-                                            <ComboBox Margin="5" Width="200"
+                        <Grid Grid.Row="1" Margin="5" DataContext="{Binding SelectedGroupForEdit}" 
+                              IsEnabled="{Binding Converter={StaticResource IsNotNullConverter}}">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="1*" />
+                            </Grid.RowDefinitions>
+                            <GroupBox
+                                    Margin="5" materialDesign:ColorZoneAssist.Mode="PrimaryLight"
+                                    Header="Group parameters">
+                                <Grid Margin="5">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <TextBox
+                                            VerticalAlignment="Center"
+                                            materialDesign:HintAssist.Hint="Group name"
+                                            Text="{Binding GroupName}"
+                                            Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                                    <TextBox
+                                            Grid.Row="1" VerticalAlignment="Center"
+                                            materialDesign:HintAssist.Hint="Group order priority"
+                                            Text="{Binding Order}"
+                                            Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                                </Grid>
+                            </GroupBox>
+                            <GroupBox Grid.Row="1"
+                                              Margin="5" materialDesign:ColorZoneAssist.Mode="PrimaryDark"
+                                              Style="{StaticResource MaterialDesignGroupBox}"
+                                              Header="Group rule settings">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="1*"/>
+                                    </Grid.RowDefinitions>
+                                    <StackPanel HorizontalAlignment="Right" Orientation="Horizontal" Margin="5"
+                                                DataContext="{Binding DataContext.RuleSettings, RelativeSource={RelativeSource AncestorType=ofxAnalyzer:MainWindow}}">
+                                        <ComboBox Margin="5" Width="250"
                                                       materialDesign:ComboBoxAssist.MaxLength="10"
-                                                      materialDesign:HintAssist.Hint="Select rule type"
-                                                      materialDesign:HintAssist.HintOpacity=".26"
+                                                      materialDesign:HintAssist.Hint="Select rule type to create"
+                                                      materialDesign:HintAssist.HintOpacity=".5"
                                                       ItemsSource="{Binding AvailableRules}"
                                                       DisplayMemberPath="DisplayName"
                                                       SelectedItem="{Binding SelectedRuleToCreate}"
                                                       IsEditable="True" />
-                                            <Button Click="CreateNewRuleButton_Click" Margin="5"
+                                        <Button Click="CreateNewRuleButton_Click" Margin="5"
                                                     Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}">
-                                                <materialDesign:PackIcon Kind="SignDirectionPlus" />
-                                            </Button>
-                                        </StackPanel>
-                                        <ListBox ItemTemplate="{DynamicResource GroupRuleListBoxItemTemplate}"
-                                                 ItemsSource="{Binding Rules}">
-                                            <ListBox.ItemContainerStyle>
-                                                <Style TargetType="ListBoxItem">
-                                                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                                                </Style>
-                                            </ListBox.ItemContainerStyle>
-                                        </ListBox>
+                                            <materialDesign:PackIcon Kind="SignDirectionPlus" />
+                                        </Button>
                                     </StackPanel>
-                                </materialDesign:Card>
-                            </Grid>
-                        </materialDesign:Card>
-                    </StackPanel>
+                                    <ListBox Grid.Row="1" Margin="0 5"
+                                                 ItemTemplate="{DynamicResource GroupRuleListBoxItemTemplate}"
+                                                 ItemsSource="{Binding Rules}">
+                                        <ListBox.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <WrapPanel Orientation="Horizontal" HorizontalAlignment="Stretch" />
+                                            </ItemsPanelTemplate>
+                                        </ListBox.ItemsPanel>
+                                        <ListBox.ItemContainerStyle>
+                                            <Style TargetType="ListBoxItem">
+                                                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                            </Style>
+                                        </ListBox.ItemContainerStyle>
+                                    </ListBox>
+                                </Grid>
+                            </GroupBox>
+                        </Grid>
+                    </Grid>
                 </TabItem>
                 <TabItem>
                     <TabItem.Header>
@@ -258,15 +291,17 @@
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="1*" />
                             </Grid.RowDefinitions>
-                            <materialDesign:Card Grid.Row="0" Margin="5"
-                                                 materialDesign:ElevationAssist.Elevation="Dp1">
+                            <GroupBox
+                                      Margin="5" materialDesign:ColorZoneAssist.Mode="PrimaryDark"
+                                      Style="{StaticResource MaterialDesignGroupBox}"
+                                      Header="Group rule settings">
                                 <StackPanel>
                                     <StackPanel HorizontalAlignment="Right" Orientation="Horizontal" Margin="5"
                                                 DataContext="{Binding DataContext.RuleSettings, RelativeSource={RelativeSource AncestorType=ofxAnalyzer:MainWindow}}">
                                         <ComboBox Margin="5" Width="200"
                                                   materialDesign:ComboBoxAssist.MaxLength="10"
-                                                  materialDesign:HintAssist.Hint="Select rule type"
-                                                  materialDesign:HintAssist.HintOpacity=".26"
+                                                  materialDesign:HintAssist.Hint="Select rule type to create"
+                                                  materialDesign:HintAssist.HintOpacity=".5"
                                                   ItemsSource="{Binding AvailableRules}"
                                                   DisplayMemberPath="DisplayName"
                                                   SelectedItem="{Binding SelectedRuleToCreateInIgnore}"
@@ -276,8 +311,13 @@
                                             <materialDesign:PackIcon Kind="SignDirectionPlus" />
                                         </Button>
                                     </StackPanel>
-                                    <ListBox ItemTemplate="{DynamicResource GroupRuleListBoxItemTemplate}"
-                                             ItemsSource="{Binding Rules}">
+                                    <ListBox Margin="0 5" ItemTemplate="{DynamicResource GroupRuleListBoxItemTemplate}"
+                                              ItemsSource="{Binding Rules}">
+                                        <ListBox.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <WrapPanel Orientation="Horizontal" />
+                                            </ItemsPanelTemplate>
+                                        </ListBox.ItemsPanel>
                                         <ListBox.ItemContainerStyle>
                                             <Style TargetType="ListBoxItem">
                                                 <Setter Property="HorizontalContentAlignment" Value="Stretch" />
@@ -285,7 +325,7 @@
                                         </ListBox.ItemContainerStyle>
                                     </ListBox>
                                 </StackPanel>
-                            </materialDesign:Card>
+                            </GroupBox>
                         </Grid>
                     </materialDesign:Card>
                 </TabItem>

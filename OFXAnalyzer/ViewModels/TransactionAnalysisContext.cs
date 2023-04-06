@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Transactions;
+using System.Windows.Input;
 using OFXAnalyzer.Core;
 using TiqUtils.Wpf.AbstractClasses;
 
@@ -27,6 +28,16 @@ public class TransactionAnalysisContext : Notified
     public TransactionAnalysisContext()
     {
         this.RuleSettings = new RuleSettingsContext();
+        this.RemoveRuleFromGroupCommand = new ActionCommand(this.RemoveRuleFromGroup);
+    }
+
+    public ICommand RemoveRuleFromGroupCommand { get; set; }
+
+    private void RemoveRuleFromGroup(object item)
+    {
+        var group = (GroupingRule)item;
+        this.SelectedGroupForEdit.Rules.Remove(group);
+        this.SelectedGroupForEdit.GroupInSettings.Rules.Remove(group);
     }
 
     public ObservableCollection<TransactionDataBucketed>? Transactions

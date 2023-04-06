@@ -19,6 +19,7 @@
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Popupbox.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <controls:IsNotNullConverter x:Key="IsNotNullConverter"/>
+            <controls:DisplayNameFromClassConverter x:Key="DisplayNameFromClassConverter"/>
         </ResourceDictionary>
     </Application.Resources>
 </Application>
