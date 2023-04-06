@@ -9,3 +9,4 @@
 - Make better UI
 - Add more rules
 - Add conditional formulas for matching instead of hardcoded rule types.
+- Group coloring option
