@@ -3,17 +3,293 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:OFXAnalyzer"
-        mc:Ignorable="d" 
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:controls="clr-namespace:OFXAnalyzer.Controls"
+        xmlns:ofxAnalyzer="clr-namespace:OFXAnalyzer"
+        mc:Ignorable="d"
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         TextElement.FontWeight="Regular"
         TextElement.FontSize="13"
-        TextOptions.TextFormattingMode="Ideal" 
-        TextOptions.TextRenderingMode="Auto"    
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        TextOptions.TextFormattingMode="Ideal"
+        TextOptions.TextRenderingMode="Auto"
+        Title="MainWindow" Height="800" Width="1300" Closing="Window_Closing">
+    <Window.Resources>
+        <DataTemplate x:Key="GroupRuleListBoxItemTemplate">
+            <Grid Margin="5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <controls:AutoUIControl Item="{Binding}" VerticalAlignment="Center" />
+                <Button Grid.Column="1" Style="{StaticResource MaterialDesignFloatingActionMiniSecondaryLightButton}"
+                        Margin="5">
+                    <materialDesign:PackIcon
+                        Width="16"
+                        Height="16"
+                        Kind="DeleteForever" />
+                </Button>
+            </Grid>
+        </DataTemplate>
+    </Window.Resources>
+    <Grid Margin="5">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="1*" />
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Horizontal">
+            <materialDesign:Card>
+                <Menu materialDesign:MenuAssist.TopLevelMenuItemHeight="25">
+                    <MenuItem Header="Load OFX" Click="LoadOfxButton_Click" Icon="{materialDesign:PackIcon Kind=FileDocumentArrowRight}" />
+                    <MenuItem Header="Recalculate Grouping" Click="RecalculateGrouping_Click" Icon="{materialDesign:PackIcon Kind=CalculatorVariant}" />
+                </Menu>
+            </materialDesign:Card>
+        </StackPanel>
+        <StackPanel Grid.Row="1" Orientation="Horizontal">
+            <TextBlock Margin="5" Text="Balance: " />
+            <TextBlock Margin="5" Text="{Binding BalanceAmount, FallbackValue=100}" />
+            <TextBlock Margin="5" Text="Income: " />
+            <TextBlock Margin="5" Text="{Binding IncomeAmount, FallbackValue=200}" />
+            <TextBlock Margin="5" Text="Expenses: " />
+            <TextBlock Margin="5" Text="{Binding ExpensesAmount, FallbackValue=100}" />
+        </StackPanel>
+        <materialDesign:Card
+            Grid.Row="2">
+            <TabControl
+                VerticalContentAlignment="Top"
+                HorizontalContentAlignment="Center"
+                TabStripPlacement="Bottom"
+                Style="{StaticResource MaterialDesignNavigationRailTabControl}"
+                materialDesign:NavigationRailAssist.ShowSelectionBackground="True"
+                materialDesign:ColorZoneAssist.Mode="PrimaryDark">
+                <TabItem>
+                    <TabItem.Header>
+                        <StackPanel
+                            Width="auto"
+                            Height="auto">
+                            <materialDesign:PackIcon
+                                Width="24"
+                                Height="24"
+                                HorizontalAlignment="Center"
+                                Kind="BriefcaseArrowLeftRight" />
+                            <TextBlock
+                                HorizontalAlignment="Center"
+                                FontSize="10"
+                                Text="Transactions" />
+                        </StackPanel>
+                    </TabItem.Header>
+                    <DataGrid
+                        CanUserAddRows="False"
+                        ItemsSource="{Binding Transactions}"
+                        SelectionMode="Extended"
+                        IsReadOnly="True"
+                        AutoGenerateColumns="False"
+                        SelectionUnit="Cell" >
+                        <DataGrid.Columns>
+                            <DataGridTextColumn
+                                Binding="{Binding Name}"
+                                Header="Name" />
+                            <DataGridTextColumn
+                                Binding="{Binding Amount}"
+                                Header="Amount" />
+                            <DataGridTextColumn
+                                Binding="{Binding Date}"
+                                Header="Date" />
+                            <DataGridTextColumn
+                                Binding="{Binding Group.GroupName}"
+                                Header="Group" />
+                            <DataGridCheckBoxColumn
+                                Binding="{Binding IsIgnored}"
+                                Header="Is Ignored" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </TabItem>
+                <TabItem>
+                    <TabItem.Header>
+                        <StackPanel
+                            Width="auto"
+                            Height="auto">
+                            <materialDesign:PackIcon
+                                Width="24"
+                                Height="24"
+                                HorizontalAlignment="Center"
+                                Kind="Group" />
+                            <TextBlock
+                                HorizontalAlignment="Center"
+                                FontSize="10"
+                                Text="Groups Balance" />
+                        </StackPanel>
+                    </TabItem.Header>
+                    <StackPanel>
+                        <DataGrid
+                            CanUserAddRows="False"
+                            ItemsSource="{Binding Groups}"
+                            IsReadOnly="True"
+                            HeadersVisibility="Column"
+                            AutoGenerateColumns="False"
+                            SelectionUnit="FullRow">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn
+                                    SortDirection="Ascending"
+                                    Binding="{Binding Order}"
+                                    Header="Order" />
+                                <DataGridTextColumn
+                                    Binding="{Binding GroupName}"
+                                    Header="Name" />
+                                <DataGridTextColumn
+                                    Binding="{Binding Balance}"
+                                    Header="Balance" />
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </StackPanel>
+                </TabItem>
+                <TabItem IsSelected="true">
+                    <TabItem.Header>
+                        <StackPanel
+                            Width="auto"
+                            Height="auto">
+                            <materialDesign:PackIcon
+                                Width="24"
+                                Height="24"
+                                HorizontalAlignment="Center"
+                                Kind="CogOutline" />
+                            <TextBlock
+                                HorizontalAlignment="Center"
+                                FontSize="10"
+                                Text="Group Settings" />
+                        </StackPanel>
+                    </TabItem.Header>
+                    <StackPanel Margin="10">
+                        <Grid Margin="5">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1*" />
+                                <ColumnDefinition Width="1*" />
+                            </Grid.ColumnDefinitions>
+                            <ComboBox Margin="5"
+                                      materialDesign:ComboBoxAssist.MaxLength="10"
+                                      materialDesign:HintAssist.Hint="Select group"
+                                      materialDesign:HintAssist.HintOpacity=".26"
+                                      ItemsSource="{Binding Groups}"
+                                      DisplayMemberPath="GroupName"
+                                      SelectedItem="{Binding SelectedGroupForEdit}"
+                                      IsEditable="True" />
+                            <StackPanel Grid.Column="1" HorizontalAlignment="Right" Orientation="Horizontal">
+                                <TextBox Width="150" Name="NewGroupName"
+                                         materialDesign:HintAssist.Hint="New group name" Margin="5"
+                                         Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                                <Button Click="CreateNewGroupButton_OnClick" Margin="5"
+                                        Style="{StaticResource MaterialDesignFloatingActionMiniSecondaryButton}">
+                                    <materialDesign:PackIcon Kind="ShapeSquarePlus" />
+                                </Button>
+                            </StackPanel>
+                        </Grid>
+                        <materialDesign:Card
+                            IsEnabled="{Binding SelectedGroupForEdit, Converter={StaticResource IsNotNullConverter}}"
+                            materialDesign:ElevationAssist.Elevation="Dp2">
+                            <Grid Margin="5" DataContext="{Binding SelectedGroupForEdit}">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="1*" />
+                                </Grid.RowDefinitions>
+                                <TextBox
+                                    VerticalAlignment="Center"
+                                    materialDesign:HintAssist.Hint="Group name"
+                                    Text="{Binding GroupName}"
+                                    Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                                <TextBox
+                                    Grid.Row="1" VerticalAlignment="Center"
+                                    materialDesign:HintAssist.Hint="Group order priority"
+                                    Text="{Binding Order}"
+                                    Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
+                                <materialDesign:Card Grid.Row="2" Margin="5"
+                                                     materialDesign:ElevationAssist.Elevation="Dp1">
+                                    <StackPanel>
+                                        <StackPanel HorizontalAlignment="Right" Orientation="Horizontal" Margin="5"
+                                                    DataContext="{Binding DataContext.RuleSettings, RelativeSource={RelativeSource AncestorType=ofxAnalyzer:MainWindow}}">
+                                            <ComboBox Margin="5" Width="200"
+                                                      materialDesign:ComboBoxAssist.MaxLength="10"
+                                                      materialDesign:HintAssist.Hint="Select rule type"
+                                                      materialDesign:HintAssist.HintOpacity=".26"
+                                                      ItemsSource="{Binding AvailableRules}"
+                                                      DisplayMemberPath="DisplayName"
+                                                      SelectedItem="{Binding SelectedRuleToCreate}"
+                                                      IsEditable="True" />
+                                            <Button Click="CreateNewRuleButton_Click" Margin="5"
+                                                    Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}">
+                                                <materialDesign:PackIcon Kind="SignDirectionPlus" />
+                                            </Button>
+                                        </StackPanel>
+                                        <ListBox ItemTemplate="{DynamicResource GroupRuleListBoxItemTemplate}"
+                                                 ItemsSource="{Binding Rules}">
+                                            <ListBox.ItemContainerStyle>
+                                                <Style TargetType="ListBoxItem">
+                                                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                                </Style>
+                                            </ListBox.ItemContainerStyle>
+                                        </ListBox>
+                                    </StackPanel>
+                                </materialDesign:Card>
+                            </Grid>
+                        </materialDesign:Card>
+                    </StackPanel>
+                </TabItem>
+                <TabItem>
+                    <TabItem.Header>
+                        <StackPanel
+                            Width="auto"
+                            Height="auto">
+                            <materialDesign:PackIcon
+                                Width="24"
+                                Height="24"
+                                HorizontalAlignment="Center"
+                                Kind="FilterCog" />
+                            <TextBlock
+                                HorizontalAlignment="Center"
+                                FontSize="10"
+                                Text="Ignore Settings" />
+                        </StackPanel>
+                    </TabItem.Header>
+                    <materialDesign:Card materialDesign:ElevationAssist.Elevation="Dp2">
+                        <Grid Margin="5" DataContext="{Binding TransactionIgnoreGroup}">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="1*" />
+                            </Grid.RowDefinitions>
+                            <materialDesign:Card Grid.Row="0" Margin="5"
+                                                 materialDesign:ElevationAssist.Elevation="Dp1">
+                                <StackPanel>
+                                    <StackPanel HorizontalAlignment="Right" Orientation="Horizontal" Margin="5"
+                                                DataContext="{Binding DataContext.RuleSettings, RelativeSource={RelativeSource AncestorType=ofxAnalyzer:MainWindow}}">
+                                        <ComboBox Margin="5" Width="200"
+                                                  materialDesign:ComboBoxAssist.MaxLength="10"
+                                                  materialDesign:HintAssist.Hint="Select rule type"
+                                                  materialDesign:HintAssist.HintOpacity=".26"
+                                                  ItemsSource="{Binding AvailableRules}"
+                                                  DisplayMemberPath="DisplayName"
+                                                  SelectedItem="{Binding SelectedRuleToCreateInIgnore}"
+                                                  IsEditable="True" />
+                                        <Button Click="CreateNewIgnoreRuleButton_Click" Margin="5"
+                                                Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}">
+                                            <materialDesign:PackIcon Kind="SignDirectionPlus" />
+                                        </Button>
+                                    </StackPanel>
+                                    <ListBox ItemTemplate="{DynamicResource GroupRuleListBoxItemTemplate}"
+                                             ItemsSource="{Binding Rules}">
+                                        <ListBox.ItemContainerStyle>
+                                            <Style TargetType="ListBoxItem">
+                                                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                            </Style>
+                                        </ListBox.ItemContainerStyle>
+                                    </ListBox>
+                                </StackPanel>
+                            </materialDesign:Card>
+                        </Grid>
+                    </materialDesign:Card>
+                </TabItem>
+            </TabControl>
+        </materialDesign:Card>
     </Grid>
 </Window>

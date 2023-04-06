@@ -9,7 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="MaterialDesignThemes" Version="4.8.0" />
-    <PackageReference Include="TiqUtils" Version="1.0.0" />
+    <PackageReference Include="TiqUtils" Version="1.0.1" />
     <PackageReference Include="TiqUtils.Wpf" Version="1.0.0" />
   </ItemGroup>
 
