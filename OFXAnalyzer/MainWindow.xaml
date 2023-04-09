@@ -14,7 +14,7 @@
         TextElement.FontSize="13"
         TextOptions.TextFormattingMode="Ideal"
         TextOptions.TextRenderingMode="Auto"
-        Title="MainWindow" Height="800" Width="1300" Closing="Window_Closing">
+        Title="Ofx Analyzer" Height="800" Width="1300" Closing="Window_Closing">
     <Window.Resources>
         <DataTemplate x:Key="GroupRuleListBoxItemTemplate">
             <materialDesign:Card MinWidth="300" MaxWidth="450">
