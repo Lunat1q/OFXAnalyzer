@@ -5,8 +5,8 @@
 - Transaction ignore logic, that is helpful to filter out transactions from balance income and expenses
 - Transaction grouping with rich settings and multiple matching rules
 
-## Plans
-- Make better UI
+## Plans 
 - Add more rules
 - Add conditional formulas for matching instead of hardcoded rule types.
 - Group coloring option
+- Refactor `TransactionAnalysisContext` madness
