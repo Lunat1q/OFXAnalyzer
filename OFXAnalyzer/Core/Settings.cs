@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Windows.Media;
 using OFXAnalyzer.ViewModels;
 using TiqUtils.SettingsController;
 using TiqUtils.Wpf.UIBuilders;
@@ -46,6 +47,10 @@ public class TranGroupSettings
 
     public List<GroupingRule> Rules { get; set; } = new();
     public int Order { get; set; }
+
+    public bool UseCustomColor { get; set; }
+
+    public Color? GroupColor { get; set; }
 }
 
 public abstract class GroupingRule

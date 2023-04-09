@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Drawing;
 using System.Linq;
-using System.Transactions;
 using System.Windows.Input;
 using OFXAnalyzer.Core;
 using TiqUtils.Wpf.AbstractClasses;
@@ -202,6 +202,8 @@ public class TransactionAnalysisContext : Notified
                 GroupInSettings = x,
                 GroupName = x.Name,
                 Order = x.Order,
+                GroupColor = x.GroupColor,
+                UseCustomColor = x.UseCustomColor,
                 Rules = new ObservableCollection<GroupingRule>(x.Rules)
             })
         );

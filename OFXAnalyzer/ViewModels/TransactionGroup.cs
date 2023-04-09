@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Windows.Documents;
+using System.Windows.Media;
 using OFXAnalyzer.Core;
 using TiqUtils.Wpf.AbstractClasses;
 
@@ -13,6 +14,8 @@ public class TransactionGroup : Notified
     private ObservableCollection<GroupingRule> _rules = new();
     private decimal _balance;
     private int _order;
+    private Color? _groupColor;
+    private bool _useCustomColor;
 
     public TranGroupSettings GroupInSettings { get; set; }
 
@@ -51,6 +54,33 @@ public class TransactionGroup : Notified
         }
     }
 
+    public bool UseCustomColor
+    {
+        get => this._useCustomColor;
+        set
+        {
+            if (value == this._useCustomColor) return;
+            this._useCustomColor = value;
+            this.GroupInSettings.UseCustomColor = value;
+            if (this._useCustomColor && this.GroupColor == null)
+            {
+                this.GroupColor = Color.FromRgb(255, 89, 89);
+            }
+            this.OnPropertyChanged();
+        }
+    }
+
+    public Color? GroupColor
+    {
+        get => this._groupColor;
+        set
+        {
+            this._groupColor = value;
+            this.GroupInSettings.GroupColor = value;
+            this.OnPropertyChanged();
+        }
+    }
+
     public IEnumerable<TransactionDataBucketed> Transactions => this._transactions;
 
     public void AddTransaction(TransactionDataBucketed transaction)
@@ -78,5 +108,13 @@ public class TransactionGroup : Notified
     public override string ToString()
     {
         return this.GroupName;
+    }
+
+    public void TriggerGroupRecolorUpdate()
+    {
+        foreach (var transaction in this.Transactions)
+        {
+            transaction.GroupRecolorUpdate();
+        }
     }
 }

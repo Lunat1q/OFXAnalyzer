@@ -5,6 +5,8 @@ using System.Linq;
 using OFXAnalyzer.ViewModels;
 using TiqUtils.Serialize;
 using TiqUtils.TypeSpecific;
+using System.Windows.Media;
+using MaterialDesignThemes.Wpf;
 
 namespace OFXAnalyzer
 {
@@ -24,6 +26,20 @@ namespace OFXAnalyzer
             this._context = new TransactionAnalysisContext(this._settings);
             this.DataContext = this._context;
             this._context.Init();
+            SetupTheme();
+        }
+
+        private static void SetupTheme()
+        {
+            var paletteHelper = new PaletteHelper();
+            var theme = (Theme)paletteHelper.GetTheme();
+            theme.ColorAdjustment = new ColorAdjustment()
+            {
+                DesiredContrastRatio = 4.5f,
+                Contrast = Contrast.Medium,
+                Colors = ColorSelection.All
+            };
+            paletteHelper.SetTheme(theme);
         }
 
         private void LoadOfxButton_Click(object sender, RoutedEventArgs e)
@@ -47,10 +63,6 @@ namespace OFXAnalyzer
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             Settings.Default.Save();
-        }
-
-        private void MenuItem_OnClick(object sender, RoutedEventArgs e)
-        {
         }
 
         private void CreateNewGroupButton_OnClick(object sender, RoutedEventArgs e)
@@ -87,6 +99,23 @@ namespace OFXAnalyzer
             if (selectedNewRule != null)
             {
                 TransactionAnalysisContext.CreateNewRule(this._context.TransactionIgnoreGroup, selectedNewRule);
+            }
+        }
+
+        private void ColorPicker_ColorChanged(object sender, RoutedPropertyChangedEventArgs<System.Windows.Media.Color> e)
+        {
+            this._context.SelectedGroupForEdit.TriggerGroupRecolorUpdate();
+        }
+
+        private void CheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            if (this._context.SelectedGroupForEdit.UseCustomColor)
+            {
+                this._context.SelectedGroupForEdit.GroupColor = Color.FromRgb(255, 89, 89);
+            }
+            else
+            {
+                this._context.SelectedGroupForEdit.GroupColor = Colors.Transparent;
             }
         }
     }

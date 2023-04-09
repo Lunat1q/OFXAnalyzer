@@ -96,21 +96,44 @@
                         ItemsSource="{Binding Transactions}"
                         SelectionMode="Extended"
                         IsReadOnly="True"
+                        materialDesign:DataGridAssist.CellPadding="0"
                         AutoGenerateColumns="False"
                         SelectionUnit="Cell" >
                         <DataGrid.Columns>
-                            <DataGridTextColumn
-                                Binding="{Binding Name}"
-                                Header="Name" />
-                            <DataGridTextColumn
-                                Binding="{Binding Amount}"
-                                Header="Amount" />
-                            <DataGridTextColumn
-                                Binding="{Binding Date}"
-                                Header="Date" />
-                            <DataGridTextColumn
-                                Binding="{Binding Group.GroupName}"
-                                Header="Group" />
+                            <DataGridTemplateColumn Header="Name" >
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                            <TextBlock Text="{Binding Name}" Padding="5"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="Amount" >
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Amount}" Padding="5"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="Date" >
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Date}" Padding="5"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="Group" >
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Border Padding="4" Margin="1">
+                                            <Border.Background>
+                                                <SolidColorBrush Color="{Binding Group, Converter={StaticResource GroupColorConverter}}" />
+                                            </Border.Background>
+                                            <TextBlock Text="{Binding Group.GroupName}" >
+                                            </TextBlock>
+                                        </Border>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
                             <DataGridCheckBoxColumn
                                 Binding="{Binding IsIgnored}"
                                 Header="Is Ignored" />
@@ -208,10 +231,11 @@
                                 <RowDefinition Height="1*" />
                             </Grid.RowDefinitions>
                             <GroupBox
-                                    Margin="5" materialDesign:ColorZoneAssist.Mode="PrimaryLight"
+                                    Margin="5" materialDesign:ColorZoneAssist.Mode="PrimaryMid"
                                     Header="Group parameters">
                                 <Grid Margin="5">
                                     <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
                                         <RowDefinition Height="Auto" />
                                         <RowDefinition Height="Auto" />
                                     </Grid.RowDefinitions>
@@ -225,6 +249,16 @@
                                             materialDesign:HintAssist.Hint="Group order priority"
                                             Text="{Binding Order}"
                                             Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                                    <DockPanel Grid.Row="2" Margin="0 5">
+                                        <CheckBox Content="Use group custom color" IsChecked="{Binding UseCustomColor}"/>
+                                        <Rectangle Margin="15 5 5 5" Width="50" Height="20" >
+                                            <Rectangle.Fill>
+                                                <SolidColorBrush Color="{Binding GroupColor}"/>
+                                            </Rectangle.Fill>
+                                        </Rectangle>
+                                        <materialDesign:ColorPicker x:Name="ColorPicker" IsEnabled="{Binding UseCustomColor}"
+                                                                    Color="{Binding GroupColor, Delay=25}" ColorChanged="ColorPicker_ColorChanged" />
+                                    </DockPanel>
                                 </Grid>
                             </GroupBox>
                             <GroupBox Grid.Row="1"

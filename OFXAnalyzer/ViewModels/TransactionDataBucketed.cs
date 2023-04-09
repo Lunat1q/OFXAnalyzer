@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using OFXAnalyzer.Core;
 using TiqUtils.Wpf.AbstractClasses;
 
@@ -62,5 +63,10 @@ public class TransactionDataBucketed : Notified
             this._group = value;
             this.OnPropertyChanged();
         }
+    }
+
+    public void GroupRecolorUpdate()
+    {
+        this.OnPropertyChangedByName(nameof(this.Group));
     }
 }

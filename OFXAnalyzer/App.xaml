@@ -8,7 +8,7 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <materialDesign:BundledTheme BaseTheme="Light" PrimaryColor="LightBlue" SecondaryColor="Lime" />
+                <materialDesign:BundledTheme BaseTheme="Light" PrimaryColor="Cyan" SecondaryColor="Teal" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ToggleButton.xaml" />
@@ -20,6 +20,7 @@
             </ResourceDictionary.MergedDictionaries>
             <controls:IsNotNullConverter x:Key="IsNotNullConverter"/>
             <controls:DisplayNameFromClassConverter x:Key="DisplayNameFromClassConverter"/>
+            <controls:GroupColorConverter x:Key="GroupColorConverter"/>
         </ResourceDictionary>
     </Application.Resources>
 </Application>
