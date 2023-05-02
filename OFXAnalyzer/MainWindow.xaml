@@ -94,34 +94,34 @@
                     <DataGrid Margin="5"
                         CanUserAddRows="False"
                         ItemsSource="{Binding Transactions}"
-                        SelectionMode="Extended"
+                        SelectionMode="Single"
                         IsReadOnly="True"
                         materialDesign:DataGridAssist.CellPadding="0"
                         AutoGenerateColumns="False"
                         SelectionUnit="Cell" >
                         <DataGrid.Columns>
-                            <DataGridTemplateColumn Header="Name" >
+                            <DataGridTemplateColumn Header="Name" ClipboardContentBinding="{Binding Name}">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                            <TextBlock Text="{Binding Name}" Padding="5"/>
+                                            <TextBlock Text="{Binding Name}" Padding="5" />
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
-                            <DataGridTemplateColumn Header="Amount" >
+                            <DataGridTemplateColumn Header="Amount" SortMemberPath="Amount" CanUserSort="True">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding Amount}" Padding="5"/>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
-                            <DataGridTemplateColumn Header="Date" >
+                            <DataGridTemplateColumn Header="Date" SortMemberPath="Date" CanUserSort="True">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding Date}" Padding="5"/>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
-                            <DataGridTemplateColumn Header="Group" >
+                            <DataGridTemplateColumn Header="Group" SortMemberPath="Group.Order" CanUserSort="True">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <Border Padding="4" Margin="1">

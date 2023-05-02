@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Media;
 using OFXAnalyzer.Core;
@@ -72,7 +71,7 @@ public class TransactionGroup : Notified
 
     public Color? GroupColor
     {
-        get => this._groupColor;
+        get => this._groupColor ?? Colors.Transparent;
         set
         {
             this._groupColor = value;

@@ -75,7 +75,7 @@ public class GroupingRuleAny : GroupingRule
     }
 }
 
-[DisplayName("Name starts with rule")]
+[DisplayName("'Name starts with' rule")]
 public class GroupingRuleStartsWith : GroupingRule
 {
     public GroupingRuleStartsWith()
@@ -91,7 +91,7 @@ public class GroupingRuleStartsWith : GroupingRule
     }
 }
 
-[DisplayName("Name ends with rule")]
+[DisplayName("'Name ends with' rule")]
 public class GroupingRuleEndsWith : GroupingRule
 {
     public GroupingRuleEndsWith()
@@ -107,7 +107,7 @@ public class GroupingRuleEndsWith : GroupingRule
     }
 }
 
-[DisplayName("Name match rule")]
+[DisplayName("'Name match' rule")]
 public class GroupingRuleByName : GroupingRule
 {
     public GroupingRuleByName()
